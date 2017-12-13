@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MovingPlatformComponent : MonoBehaviour {
 
-    public List<Vector3> positions;    
-
+    public List<Vector3> positions;
+    public float timeToReach = 1f;
     private int currentPos = 0;
 	// Use this for initialization
 	void Start () {
@@ -22,9 +22,9 @@ public class MovingPlatformComponent : MonoBehaviour {
             currentPos = -1;
         }
         
-        if(this.transform.position != positions[currentPos + 1])
+        if(this.transform.localPosition != positions[currentPos + 1])
         {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, positions[currentPos + 1], 0.1f);
+            this.transform.localPosition = Vector3.Lerp(this.transform.localPosition,Vector3.MoveTowards(this.transform.localPosition, positions[currentPos + 1], 0.1f),timeToReach);
         }
         else
         {

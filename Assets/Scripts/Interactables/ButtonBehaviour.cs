@@ -8,6 +8,7 @@ public class ButtonBehaviour : InteractableComponent {
     public List<InteractableComponent> interactions;
     public Transform redButton;
     public bool oneTimeOnly = false;
+    public AudioSource beepSound;
 
     private bool toggle = false;
     private float timer = 0f;
@@ -24,6 +25,7 @@ public class ButtonBehaviour : InteractableComponent {
         {
             interacted = false;
             timer = 0f;
+            beepSound.Play();
             if (isToggle)
             {
                 toggle = !toggle;
@@ -34,6 +36,7 @@ public class ButtonBehaviour : InteractableComponent {
             }
             interacting = true;
             redButton.localPosition += new Vector3(0, 0.09f, 0);
+
         }
     }
 

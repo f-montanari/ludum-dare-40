@@ -13,13 +13,34 @@ public class CameraScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(player.transform.position.y >= minY)
+        try
         {
-            transform.position = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
+            if (player.transform.position.y >= minY)
+            {
+                transform.position = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x, minY, transform.position.z);
+            }
         }
-        else
+        catch (MissingReferenceException e)
         {
-            transform.position = new Vector3(transform.position.x, minY, transform.position.z);
-        }
+            int counter = 0;
+            while (player == null)
+            {
+                player = GameObject.FindGameObjectWithTag("Player");
+                counter++;
+                if(counter >= 30)
+                {
+                    continue;
+                }
+            }
+            if (player == null)
+            {
+                Debug.LogError("No player found");
+                throw e;
+            }
+        }        
 	}
 }

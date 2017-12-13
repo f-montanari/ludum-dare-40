@@ -12,11 +12,12 @@ public class PlayerMovement : MonoBehaviour {
     public AudioSource mainAudio;
     public AudioClip jumpClip;
     public AudioClip deathClip;
+    public Transform lastCheckpoint;
+    public GameObject menuContainer;
 
     private bool grounded = true;
     private Collider2D interaction;
-    Rigidbody2D rb;
-
+    private Rigidbody2D rb;
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody2D>();
@@ -71,6 +72,22 @@ public class PlayerMovement : MonoBehaviour {
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.gameObject.tag == "Checkpoint")
+        {
+            lastCheckpoint = collision.transform;
+            return;
+        }
+        if(collision.gameObject.tag == "Star")
+        {
+            collision.gameObject.GetComponent<AudioSource>().Play();            
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu");
+            return;
+        }
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Death();
+            return;
+        }
         InteractableComponent inter = collision.GetComponent<InteractableComponent>();
         if (inter != null)
         {
@@ -91,6 +108,10 @@ public class PlayerMovement : MonoBehaviour {
         mainAudio.clip = deathClip;
         mainAudio.Play();
         gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
+        menuContainer.gameObject.SetActive(true);
+        MenuController menuController = menuContainer.GetComponent<MenuController>();
+        if(menuController != null)
+            menuController.lastCheckpoint = lastCheckpoint;
         Destroy(this);
     }
 }
